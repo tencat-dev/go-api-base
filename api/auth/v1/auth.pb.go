@@ -167,8 +167,8 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\faccess_token\x18\x04 \x01(\tR\vaccessToken\x12#\n" +
 	"\rrefresh_token\x18\x05 \x01(\tR\frefreshToken2a\n" +
 	"\vAuthService\x12R\n" +
-	"\x05Login\x12\x15.auth.v1.LoginRequest\x1a\x13.auth.v1.LoginReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/loginB\x82\x01\n" +
-	"\vcom.auth.v1B\tAuthProtoP\x01Z+github.com/tencat-dev/go-api-base/api/auth/v1\xa2\x02\x03AXX\xaa\x02\aAuth.V1\xca\x02\aAuth\\V1\xe2\x02\x13Auth\\V1\\GPBMetadata\xea\x02\bAuth::V1b\x06proto3"
+	"\x05Login\x12\x15.auth.v1.LoginRequest\x1a\x13.auth.v1.LoginReply\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/loginB\x84\x01\n" +
+	"\vcom.auth.v1B\tAuthProtoP\x01Z-github.com/tencat-dev/go-api-base/api/auth/v1\xa2\x02\x03AXX\xaa\x02\aAuth.V1\xca\x02\aAuth\\V1\xe2\x02\x13Auth\\V1\\GPBMetadata\xea\x02\bAuth::V1b\x06proto3"
 
 var (
 	file_auth_v1_auth_proto_rawDescOnce sync.Once
