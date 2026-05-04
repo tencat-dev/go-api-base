@@ -76,7 +76,7 @@ const file_helloworld_v1_error_reason_proto_rawDesc = "" +
 	"\vErrorReason\x12\x1d\n" +
 	"\x13GREETER_UNSPECIFIED\x10\x00\x1a\x04\xa8E\x90\x03\x12\x18\n" +
 	"\x0eUSER_NOT_FOUND\x10\x01\x1a\x04\xa8E\x94\x03\x1a\x04\xa0E\xf4\x03B\xab\x01\n" +
-	"\x11com.helloworld.v1B\x10ErrorReasonProtoP\x01Z/github.com/tencat-dev/go-base/api/helloworld/v1\xa2\x02\x03HXX\xaa\x02\rHelloworld.V1\xca\x02\rHelloworld\\V1\xe2\x02\x19Helloworld\\V1\\GPBMetadata\xea\x02\x0eHelloworld::V1b\x06proto3"
+	"\x11com.helloworld.v1B\x10ErrorReasonProtoP\x01Z/github.com/tencat-dev/go-api-base/api/helloworld/v1\xa2\x02\x03HXX\xaa\x02\rHelloworld.V1\xca\x02\rHelloworld\\V1\xe2\x02\x19Helloworld\\V1\\GPBMetadata\xea\x02\x0eHelloworld::V1b\x06proto3"
 
 var (
 	file_helloworld_v1_error_reason_proto_rawDescOnce sync.Once

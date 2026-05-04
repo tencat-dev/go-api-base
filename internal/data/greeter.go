@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 
-	"github.com/tencat-dev/go-base/internal/biz"
+	"github.com/tencat-dev/go-api-base/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
 )

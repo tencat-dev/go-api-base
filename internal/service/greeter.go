@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	v1 "github.com/tencat-dev/go-base/api/helloworld/v1"
-	"github.com/tencat-dev/go-base/internal/biz"
+	v1 "github.com/tencat-dev/go-api-base/api/helloworld/v1"
+	"github.com/tencat-dev/go-api-base/internal/biz"
 )
 
 // GreeterService is a greeter service.
