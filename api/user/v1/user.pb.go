@@ -584,8 +584,8 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\aGetUser\x12\x17.user.v1.GetUserRequest\x1a\x15.user.v1.GetUserReply\"1\x8a\xb5\x18\x13\n" +
 	"\x04user\x12\x04read\x1a\x05admin\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/users/{id}\x12j\n" +
 	"\bListUser\x12\x18.user.v1.ListUserRequest\x1a\x16.user.v1.ListUserReply\",\x8a\xb5\x18\x13\n" +
-	"\x04user\x12\x04list\x1a\x05admin\x82\xd3\xe4\x93\x02\x0f\x12\r/api/v1/usersB\x82\x01\n" +
-	"\vcom.user.v1B\tUserProtoP\x01Z+github.com/tencat-dev/go-api-base/api/user/v1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
+	"\x04user\x12\x04list\x1a\x05admin\x82\xd3\xe4\x93\x02\x0f\x12\r/api/v1/usersB\x84\x01\n" +
+	"\vcom.user.v1B\tUserProtoP\x01Z-github.com/tencat-dev/go-api-base/api/user/v1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (
 	file_user_v1_user_proto_rawDescOnce sync.Once

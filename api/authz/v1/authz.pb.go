@@ -130,7 +130,7 @@ func (x *RevokeRoleRequest) GetRole() string {
 
 type GrantPermissionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Subject       string                 `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"` // user_id hoặc role
+	Subject       string                 `protobuf:"bytes,1,opt,name=subject,proto3" json:"subject,omitempty"` // only role
 	Object        string                 `protobuf:"bytes,2,opt,name=object,proto3" json:"object,omitempty"`   // resource
 	Action        string                 `protobuf:"bytes,3,opt,name=action,proto3" json:"action,omitempty"`   // action
 	unknownFields protoimpl.UnknownFields
@@ -211,9 +211,9 @@ const file_authz_v1_authz_proto_rawDesc = "" +
 	"\x04role\x12\x06revoke\x1a\x05admin\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/authz/roles/revoke\x12\x8f\x01\n" +
 	"\x0fGrantPermission\x12 .authz.v1.GrantPermissionRequest\x1a\x16.google.protobuf.Empty\"B\x8a\xb5\x18\x1a\n" +
 	"\n" +
-	"permission\x12\x05grant\x1a\x05admin\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/authz/permissionsB\x89\x01\n" +
+	"permission\x12\x05grant\x1a\x05admin\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/authz/permissionsB\x8b\x01\n" +
 	"\fcom.authz.v1B\n" +
-	"AuthzProtoP\x01Z,github.com/tencat-dev/go-api-base/api/authz/v1\xa2\x02\x03AXX\xaa\x02\bAuthz.V1\xca\x02\bAuthz\\V1\xe2\x02\x14Authz\\V1\\GPBMetadata\xea\x02\tAuthz::V1b\x06proto3"
+	"AuthzProtoP\x01Z.github.com/tencat-dev/go-api-base/api/authz/v1\xa2\x02\x03AXX\xaa\x02\bAuthz.V1\xca\x02\bAuthz\\V1\xe2\x02\x14Authz\\V1\\GPBMetadata\xea\x02\tAuthz::V1b\x06proto3"
 
 var (
 	file_authz_v1_authz_proto_rawDescOnce sync.Once

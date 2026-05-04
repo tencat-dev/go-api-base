@@ -110,8 +110,8 @@ const file_authz_v1_permission_proto_rawDesc = "" +
 	"\x05roles\x18\x03 \x03(\tR\x05roles:\\\n" +
 	"\n" +
 	"permission\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x01(\v2\x1a.authz.v1.PermissionOptionR\n" +
-	"permissionB\x8e\x01\n" +
-	"\fcom.authz.v1B\x0fPermissionProtoP\x01Z,github.com/tencat-dev/go-api-base/api/authz/v1\xa2\x02\x03AXX\xaa\x02\bAuthz.V1\xca\x02\bAuthz\\V1\xe2\x02\x14Authz\\V1\\GPBMetadata\xea\x02\tAuthz::V1b\x06proto3"
+	"permissionB\x90\x01\n" +
+	"\fcom.authz.v1B\x0fPermissionProtoP\x01Z.github.com/tencat-dev/go-api-base/api/authz/v1\xa2\x02\x03AXX\xaa\x02\bAuthz.V1\xca\x02\bAuthz\\V1\xe2\x02\x14Authz\\V1\\GPBMetadata\xea\x02\tAuthz::V1b\x06proto3"
 
 var (
 	file_authz_v1_permission_proto_rawDescOnce sync.Once

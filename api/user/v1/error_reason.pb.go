@@ -71,8 +71,8 @@ const file_user_v1_error_reason_proto_rawDesc = "" +
 	"\n" +
 	"\x1auser/v1/error_reason.proto\x12\auser.v1\x1a\x13errors/errors.proto*-\n" +
 	"\vErrorReason\x12\x18\n" +
-	"\x0eUSER_NOT_FOUND\x10\x00\x1a\x04\xa8E\x94\x03\x1a\x04\xa0E\xf4\x03B\x89\x01\n" +
-	"\vcom.user.v1B\x10ErrorReasonProtoP\x01Z+github.com/tencat-dev/go-api-base/api/user/v1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
+	"\x0eUSER_NOT_FOUND\x10\x00\x1a\x04\xa8E\x94\x03\x1a\x04\xa0E\xf4\x03B\x8b\x01\n" +
+	"\vcom.user.v1B\x10ErrorReasonProtoP\x01Z-github.com/tencat-dev/go-api-base/api/user/v1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (
 	file_user_v1_error_reason_proto_rawDescOnce sync.Once
