@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/anhnmt/go-authxx/password"
 	"github.com/google/uuid"
-	"github.com/matthewhartstonge/argon2"
 )
 
 // User is a User model.
@@ -32,25 +32,27 @@ type UserRepo interface {
 
 // UserBiz is a User usecase.
 type UserBiz struct {
-	repo UserRepo
-	pm   PermissionManager
+	repo           UserRepo
+	pm             PermissionManager
+	passwordHasher password.Hasher
 }
 
 // NewUserBiz new a User usecase.
 func NewUserBiz(
 	repo UserRepo,
 	pm PermissionManager,
+	passwordHasher password.Hasher,
 ) *UserBiz {
 	return &UserBiz{
-		repo: repo,
-		pm:   pm,
+		repo:           repo,
+		pm:             pm,
+		passwordHasher: passwordHasher,
 	}
 }
 
 // CreateUser creates a User, and returns the new User.
 func (b *UserBiz) CreateUser(ctx context.Context, u *User) (*User, error) {
-	argon := argon2.DefaultConfig()
-	passwordHash, err := argon.HashEncoded([]byte(u.PasswordHash))
+	passwordHash, err := b.passwordHasher.Hash(u.PasswordHash)
 	if err != nil {
 		return nil, err
 	}

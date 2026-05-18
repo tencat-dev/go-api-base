@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/anhnmt/go-authxx/password"
 	"github.com/google/uuid"
-	"github.com/matthewhartstonge/argon2"
 )
 
 type AuthLogin struct {
@@ -28,15 +28,17 @@ type AuthRepo interface {
 
 // AuthBiz is a Auth usecase.
 type AuthBiz struct {
-	repo  AuthRepo
-	authz PermissionChecker
+	repo           AuthRepo
+	authz          PermissionChecker
+	passwordHasher password.Hasher
 }
 
 // NewAuthBiz new a Auth usecase.
-func NewAuthBiz(repo AuthRepo, authz PermissionChecker) *AuthBiz {
+func NewAuthBiz(repo AuthRepo, authz PermissionChecker, passwordHasher password.Hasher) *AuthBiz {
 	return &AuthBiz{
-		repo:  repo,
-		authz: authz,
+		repo:           repo,
+		authz:          authz,
+		passwordHasher: passwordHasher,
 	}
 }
 
@@ -47,11 +49,7 @@ func (b *AuthBiz) Login(ctx context.Context, u *AuthLogin) (*Auth, error) {
 		return nil, err
 	}
 
-	ok, err := argon2.VerifyEncoded([]byte(u.Password), []byte(user.PasswordHash))
-	if err != nil {
-		return nil, err
-	}
-
+	ok := b.passwordHasher.Compare(u.Password, user.PasswordHash)
 	if !ok {
 		return nil, fmt.Errorf("invalid password")
 	}
