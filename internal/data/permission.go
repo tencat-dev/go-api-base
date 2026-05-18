@@ -3,18 +3,11 @@ package data
 import (
 	"context"
 
-	"github.com/aarondl/opt/omit"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/uuid"
-	"github.com/samber/lo"
-	"github.com/stephenafamo/bob"
-	"github.com/stephenafamo/bob/dialect/psql"
-	"github.com/stephenafamo/bob/dialect/psql/im"
-	"github.com/stephenafamo/bob/dialect/psql/sm"
 
 	"github.com/tencat-dev/go-api-base/internal/biz"
-	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres/models"
-
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres"
 )
 
 type permissionRepo struct {
@@ -31,31 +24,32 @@ func NewPermissionRepo(data *Data, logger *log.Helper) biz.PermissionRepo {
 }
 
 func (r *permissionRepo) Saves(ctx context.Context, pers []*biz.Permission) error {
-	setters := lo.Map(pers, func(per *biz.Permission, _ int) *models.PermissionSetter {
-		return &models.PermissionSetter{
-			Object: omit.From(per.Object),
-			Action: omit.From(per.Action),
-		}
-	})
-
-	_, err := models.Permissions.Insert(
-		bob.ToMods(setters...),
-		im.OnConflict("object", "action").DoNothing(),
-	).Exec(ctx, r.data.db)
+	tx, err := r.data.db.Begin(ctx)
 	if err != nil {
 		return err
 	}
+	defer tx.Rollback(ctx)
 
-	return nil
+	qtx := r.data.queries.WithTx(tx)
+
+	for _, per := range pers {
+		err := qtx.InsertPermission(ctx, postgres.InsertPermissionParams{
+			Object: per.Object,
+			Action: per.Action,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit(ctx)
 }
 
 func (r *permissionRepo) ExistByID(ctx context.Context, id uuid.UUID) (bool, error) {
-	exist, err := models.Permissions.Query(
-		sm.Where(models.Permissions.Columns.ID.EQ(psql.Arg(id))),
-	).Exists(ctx, r.data.db)
+	exists, err := r.data.queries.ExistsPermission(ctx, id)
 	if err != nil {
-		return exist, err
+		return false, err
 	}
 
-	return exist, nil
+	return exists, nil
 }

@@ -33,8 +33,8 @@
 		go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2@latest
 		go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
 		go install github.com/goforj/wire/cmd/wire@latest
-		go install github.com/stephenafamo/bob/gen/bobgen-psql@latest
 		go install github.com/bufbuild/buf/cmd/buf@latest
+		go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
   '';
 
   scripts.goget.exec = ''
@@ -56,8 +56,7 @@
   '';
 
   scripts.db-gen.exec = ''
-		PSQL_DSN=$(yq -r '.data.database.dsn' ./configs/config.yaml) \
-		bobgen-psql -c ./bobgen.yaml
+		sqlc generate
   '';
 
   scripts.wire-gen.exec = ''

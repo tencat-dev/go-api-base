@@ -48,11 +48,12 @@ func wireApp(contextContext context.Context, bootstrap *conf.Bootstrap, logger l
 		return nil, nil, err
 	}
 	permissionManager := data.NewPermissionManager(casbinAuthz)
-	userBiz := biz.NewUserBiz(userRepo, permissionManager)
+	hasher := auth.NewPasswordHasher()
+	userBiz := biz.NewUserBiz(userRepo, permissionManager, hasher)
 	userServiceServer := service.NewUserService(userBiz)
 	authRepo := data.NewAuthRepo(dataData, helper)
 	permissionChecker := data.NewPermissionChecker(casbinAuthz)
-	authBiz := biz.NewAuthBiz(authRepo, permissionChecker)
+	authBiz := biz.NewAuthBiz(authRepo, permissionChecker, hasher)
 	confAuth := newAuth(bootstrap)
 	jwt := newJwtConfig(confAuth)
 	tokenMaker := auth.NewJWTMaker(jwt)

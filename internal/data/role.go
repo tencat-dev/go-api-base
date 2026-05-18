@@ -3,17 +3,10 @@ package data
 import (
 	"context"
 
-	"github.com/aarondl/opt/omit"
-	"github.com/aarondl/opt/omitnull"
 	"github.com/google/uuid"
-	"github.com/samber/lo"
-	"github.com/stephenafamo/bob"
-	"github.com/stephenafamo/bob/dialect/psql"
-	"github.com/stephenafamo/bob/dialect/psql/im"
-	"github.com/stephenafamo/bob/dialect/psql/sm"
 
 	"github.com/tencat-dev/go-api-base/internal/biz"
-	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres/models"
+	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -32,32 +25,33 @@ func NewRoleRepo(data *Data, logger *log.Helper) biz.RoleRepo {
 }
 
 func (r *roleRepo) Saves(ctx context.Context, roles []*biz.Role) error {
-	setters := lo.Map(roles, func(role *biz.Role, index int) *models.RoleSetter {
-		return &models.RoleSetter{
-			Name:        omit.From(role.Name),
-			Description: omitnull.From(role.Description),
-			IsSystem:    omitnull.From(role.IsSystem),
-		}
-	})
-
-	_, err := models.Roles.Insert(
-		bob.ToMods(setters...),
-		im.OnConflict("name").DoNothing(),
-	).Exec(ctx, r.data.db)
+	tx, err := r.data.db.Begin(ctx)
 	if err != nil {
 		return err
 	}
+	defer tx.Rollback(ctx)
 
-	return nil
+	qtx := r.data.queries.WithTx(tx)
+
+	for _, role := range roles {
+		err := qtx.InsertRole(ctx, postgres.InsertRoleParams{
+			Name:        role.Name,
+			Description: new(role.Description),
+			IsSystem:    new(role.IsSystem),
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit(ctx)
 }
 
 func (r *roleRepo) ExistByID(ctx context.Context, id uuid.UUID) (bool, error) {
-	exist, err := models.Roles.Query(
-		sm.Where(models.Roles.Columns.ID.EQ(psql.Arg(id))),
-	).Exists(ctx, r.data.db)
+	exists, err := r.data.queries.ExistsRole(ctx, id)
 	if err != nil {
-		return exist, err
+		return false, err
 	}
 
-	return exist, nil
+	return exists, nil
 }

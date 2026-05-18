@@ -5,7 +5,6 @@ go 1.26.0
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20260415201107-50325440f8f2.1
 	buf.build/go/protovalidate v1.2.0
-	github.com/aarondl/opt v0.0.0-20250607033636-982744e1bd65
 	github.com/anhnmt/go-authxx v0.0.0-20260518004925-3c062cdb64cb
 	github.com/bytedance/sonic v1.15.1
 	github.com/casbin/casbin/v3 v3.10.0
@@ -50,9 +49,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
-	github.com/lib/pq v1.12.3 // indirect
 	github.com/matthewhartstonge/argon2 v1.5.3 // indirect
-	github.com/qdm12/reprint v0.0.0-20200326205758-722754a53494 // indirect
 	github.com/stephenafamo/scan v0.7.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect

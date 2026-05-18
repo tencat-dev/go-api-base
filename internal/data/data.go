@@ -11,6 +11,7 @@ import (
 	"github.com/stephenafamo/bob/drivers/pgx"
 
 	"github.com/tencat-dev/go-api-base/internal/conf"
+	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres"
 )
 
 // ProviderSetData is data providers.
@@ -28,7 +29,8 @@ var ProviderSetData = wire.NewSet(
 
 // Data wraps database client.
 type Data struct {
-	db pgx.Pool
+	db      pgx.Pool
+	queries *postgres.Queries
 }
 
 // NewData creates a new Data instance with PostgreSQL connection.
@@ -59,8 +61,11 @@ func NewData(ctx context.Context, c *conf.DatabaseConfig, logHelper *log.Helper)
 
 	logHelper.Info("Connect OKKK")
 
+	queries := postgres.New(pool)
+
 	d := &Data{
-		db: pool,
+		db:      pool,
+		queries: queries,
 	}
 
 	cleanup := func() {

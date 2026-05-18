@@ -691,8 +691,8 @@ const file_conf_proto_rawDesc = "" +
 	"\x03JWT\x12\x1e\n" +
 	"\x06secret\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x06secret\"$\n" +
 	"\x05Authz\x12\x1b\n" +
-	"\tauto_sync\x18\x01 \x01(\bR\bautoSyncBt\n" +
-	"\bcom.confB\tConfProtoP\x01Z-github.com/tencat-dev/go-api-base/internal/conf\xa2\x02\x03CXX\xaa\x02\x04Conf\xca\x02\x04Conf\xe2\x02\x10Conf\\GPBMetadata\xea\x02\x04Confb\x06proto3"
+	"\tauto_sync\x18\x01 \x01(\bR\bautoSyncBv\n" +
+	"\bcom.confB\tConfProtoP\x01Z/github.com/tencat-dev/go-api-base/internal/conf\xa2\x02\x03CXX\xaa\x02\x04Conf\xca\x02\x04Conf\xe2\x02\x10Conf\\GPBMetadata\xea\x02\x04Confb\x06proto3"
 
 var (
 	file_conf_proto_rawDescOnce sync.Once
