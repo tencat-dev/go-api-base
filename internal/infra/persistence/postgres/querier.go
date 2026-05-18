@@ -11,8 +11,17 @@ import (
 )
 
 type Querier interface {
+	DeleteUser(ctx context.Context, id uuid.UUID) error
+	ExistsPermission(ctx context.Context, id uuid.UUID) (bool, error)
+	ExistsRole(ctx context.Context, id uuid.UUID) (bool, error)
+	ExistsUser(ctx context.Context, id uuid.UUID) (bool, error)
 	GetUser(ctx context.Context, id uuid.UUID) (User, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
+	InsertPermission(ctx context.Context, arg InsertPermissionParams) error
+	InsertRole(ctx context.Context, arg InsertRoleParams) error
+	InsertUser(ctx context.Context, arg InsertUserParams) (User, error)
+	ListUsers(ctx context.Context, limit int32) ([]User, error)
+	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 }
 
 var _ Querier = (*Queries)(nil)

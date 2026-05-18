@@ -6,9 +6,9 @@ package postgres
 
 import (
 	"net/netip"
+	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Permission struct {
@@ -18,33 +18,33 @@ type Permission struct {
 }
 
 type Role struct {
-	ID          uuid.UUID          `db:"id" json:"id"`
-	Name        string             `db:"name" json:"name"`
-	Description *string            `db:"description" json:"description"`
-	IsSystem    *bool              `db:"is_system" json:"is_system"`
-	CreatedAt   pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt   pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID          uuid.UUID `db:"id" json:"id"`
+	Name        string    `db:"name" json:"name"`
+	Description *string   `db:"description" json:"description"`
+	IsSystem    *bool     `db:"is_system" json:"is_system"`
+	CreatedAt   time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt   time.Time `db:"updated_at" json:"updated_at"`
 }
 
 type Session struct {
-	ID           uuid.UUID          `db:"id" json:"id"`
-	UserID       uuid.UUID          `db:"user_id" json:"user_id"`
-	RefreshJti   uuid.UUID          `db:"refresh_jti" json:"refresh_jti"`
-	TokenVersion int32              `db:"token_version" json:"token_version"`
-	DeviceName   *string            `db:"device_name" json:"device_name"`
-	UserAgent    *string            `db:"user_agent" json:"user_agent"`
-	IpAddress    *netip.Addr        `db:"ip_address" json:"ip_address"`
-	CreatedAt    pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	ExpiresAt    pgtype.Timestamptz `db:"expires_at" json:"expires_at"`
-	RevokedAt    pgtype.Timestamptz `db:"revoked_at" json:"revoked_at"`
+	ID           uuid.UUID   `db:"id" json:"id"`
+	UserID       uuid.UUID   `db:"user_id" json:"user_id"`
+	RefreshJti   uuid.UUID   `db:"refresh_jti" json:"refresh_jti"`
+	TokenVersion int32       `db:"token_version" json:"token_version"`
+	DeviceName   *string     `db:"device_name" json:"device_name"`
+	UserAgent    *string     `db:"user_agent" json:"user_agent"`
+	IpAddress    *netip.Addr `db:"ip_address" json:"ip_address"`
+	CreatedAt    time.Time   `db:"created_at" json:"created_at"`
+	ExpiresAt    time.Time   `db:"expires_at" json:"expires_at"`
+	RevokedAt    time.Time   `db:"revoked_at" json:"revoked_at"`
 }
 
 type User struct {
-	ID           uuid.UUID          `db:"id" json:"id"`
-	Name         string             `db:"name" json:"name"`
-	Email        string             `db:"email" json:"email"`
-	PasswordHash string             `db:"password_hash" json:"password_hash"`
-	TokenVersion int32              `db:"token_version" json:"token_version"`
-	CreatedAt    pgtype.Timestamptz `db:"created_at" json:"created_at"`
-	UpdatedAt    pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
+	ID           uuid.UUID `db:"id" json:"id"`
+	Name         string    `db:"name" json:"name"`
+	Email        string    `db:"email" json:"email"`
+	PasswordHash string    `db:"password_hash" json:"password_hash"`
+	TokenVersion int32     `db:"token_version" json:"token_version"`
+	CreatedAt    time.Time `db:"created_at" json:"created_at"`
+	UpdatedAt    time.Time `db:"updated_at" json:"updated_at"`
 }

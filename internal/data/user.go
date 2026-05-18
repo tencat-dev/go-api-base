@@ -2,18 +2,12 @@ package data
 
 import (
 	"context"
-	"time"
-
-	"github.com/aarondl/opt/omit"
-	"github.com/google/uuid"
-	"github.com/stephenafamo/bob/dialect/psql"
-	"github.com/stephenafamo/bob/dialect/psql/dm"
-	"github.com/stephenafamo/bob/dialect/psql/sm"
-
-	"github.com/tencat-dev/go-api-base/internal/biz"
-	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres/models"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/google/uuid"
+
+	"github.com/tencat-dev/go-api-base/internal/biz"
+	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres"
 )
 
 type userRepo struct {
@@ -30,22 +24,21 @@ func NewUserRepo(data *Data, logger *log.Helper) biz.UserRepo {
 }
 
 func (r *userRepo) Save(ctx context.Context, u *biz.User) (*biz.User, error) {
-	setter := &models.UserSetter{
-		Name:         omit.From(u.Name),
-		Email:        omit.From(u.Email),
-		PasswordHash: omit.From(u.PasswordHash),
-	}
-
+	tokenVersion := int32(0)
 	if u.TokenVersion > 0 {
-		setter.TokenVersion = omit.From(u.TokenVersion)
+		tokenVersion = u.TokenVersion
 	}
 
-	insertedUser, err := models.Users.Insert(setter).One(ctx, r.data.db)
+	insertedUser, err := r.data.queries.InsertUser(ctx, postgres.InsertUserParams{
+		Name:         u.Name,
+		Email:        u.Email,
+		PasswordHash: u.PasswordHash,
+		TokenVersion: tokenVersion,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	// Update the user object with the database-assigned values
 	u.ID = insertedUser.ID
 	u.CreatedAt = insertedUser.CreatedAt
 	u.UpdatedAt = insertedUser.UpdatedAt
@@ -54,25 +47,21 @@ func (r *userRepo) Save(ctx context.Context, u *biz.User) (*biz.User, error) {
 }
 
 func (r *userRepo) Update(ctx context.Context, u *biz.User) (*biz.User, error) {
-	setter := &models.UserSetter{
-		Name:      omit.From(u.Name),
-		Email:     omit.From(u.Email),
-		UpdatedAt: omit.From(time.Now().UTC()),
-	}
-
-	_, err := models.Users.Update(
-		models.UpdateWhere.Users.ID.EQ(u.ID),
-		setter.UpdateMod(),
-	).Exec(ctx, r.data.db)
+	updatedUser, err := r.data.queries.UpdateUser(ctx, postgres.UpdateUserParams{
+		ID:    u.ID,
+		Name:  u.Name,
+		Email: u.Email,
+	})
 	if err != nil {
 		return nil, err
 	}
 
+	u.UpdatedAt = updatedUser.UpdatedAt
 	return u, nil
 }
 
 func (r *userRepo) FindByID(ctx context.Context, id uuid.UUID) (*biz.User, error) {
-	user, err := models.FindUser(ctx, r.data.db, id)
+	user, err := r.data.queries.GetUser(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -88,13 +77,13 @@ func (r *userRepo) FindByID(ctx context.Context, id uuid.UUID) (*biz.User, error
 }
 
 func (r *userRepo) ListAll(ctx context.Context) ([]*biz.User, error) {
-	userslice, err := models.Users.Query(sm.Limit(10)).All(ctx, r.data.db)
+	userSlice, err := r.data.queries.ListUsers(ctx, int32(10))
 	if err != nil {
 		return nil, err
 	}
 
 	var users []*biz.User
-	for _, user := range userslice {
+	for _, user := range userSlice {
 		users = append(users, &biz.User{
 			ID:    user.ID,
 			Name:  user.Name,
@@ -106,9 +95,7 @@ func (r *userRepo) ListAll(ctx context.Context) ([]*biz.User, error) {
 }
 
 func (r *userRepo) DeleteByID(ctx context.Context, id uuid.UUID) error {
-	_, err := models.Users.Delete(
-		dm.Where(models.Users.Columns.ID.EQ(psql.Arg(id))),
-	).Exec(ctx, r.data.db)
+	err := r.data.queries.DeleteUser(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -117,12 +104,10 @@ func (r *userRepo) DeleteByID(ctx context.Context, id uuid.UUID) error {
 }
 
 func (r *userRepo) ExistByID(ctx context.Context, id uuid.UUID) (bool, error) {
-	exist, err := models.Users.Query(
-		sm.Where(models.Users.Columns.ID.EQ(psql.Arg(id))),
-	).Exists(ctx, r.data.db)
+	exists, err := r.data.queries.ExistsUser(ctx, id)
 	if err != nil {
-		return exist, err
+		return false, err
 	}
 
-	return exist, nil
+	return exists, nil
 }
