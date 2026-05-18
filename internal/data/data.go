@@ -8,7 +8,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/goforj/wire"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/stephenafamo/bob/drivers/pgx"
 
 	"github.com/tencat-dev/go-api-base/internal/conf"
 	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres"
@@ -29,7 +28,7 @@ var ProviderSetData = wire.NewSet(
 
 // Data wraps database client.
 type Data struct {
-	db      pgx.Pool
+	db      *pgxpool.Pool
 	queries *postgres.Queries
 }
 
@@ -49,7 +48,7 @@ func NewData(ctx context.Context, c *conf.DatabaseConfig, logHelper *log.Helper)
 	logHelper.Info("Connect to database")
 
 	// Create connection pool
-	pool, err := pgx.NewWithConfig(ctx, config)
+	pool, err := pgxpool.NewWithConfig(ctx, config)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to connect to database: %v", err)
 	}

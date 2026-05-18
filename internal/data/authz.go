@@ -25,7 +25,7 @@ type CasbinAuthz struct {
 }
 
 func NewCasbinEnforcer(data *Data) (casbin.IEnforcer, error) {
-	adapter, err := pgxadapter.NewAdapterWithPool(data.db.Pool,
+	adapter, err := pgxadapter.NewAdapterWithPool(data.db,
 		pgxadapter.WithTableName("casbin_rules"),        // Optional: custom table name
 		pgxadapter.WithIndex("ptype", "v0", "v1", "v2"), // policy: sub, obj, act
 		pgxadapter.WithIndex("ptype", "v0", "v1"),       // grouping: user -> role

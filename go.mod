@@ -17,7 +17,6 @@ require (
 	github.com/jackc/pgx/v5 v5.9.2
 	github.com/noho-digital/casbin-pgx-adapter v1.2.1
 	github.com/samber/lo v1.53.0
-	github.com/stephenafamo/bob v0.43.0
 	go.uber.org/automaxprocs v1.6.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20260511170946-3700d4141b60
 	google.golang.org/grpc v1.81.1
@@ -50,7 +49,6 @@ require (
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/matthewhartstonge/argon2 v1.5.3 // indirect
-	github.com/stephenafamo/scan v0.7.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/otel v1.43.0 // indirect
