@@ -56,8 +56,7 @@
   '';
 
   scripts.db-gen.exec = ''
-		PSQL_DSN=$(yq -r '.data.database.dsn' ./configs/config.yaml) \
-		bobgen-psql -c ./bobgen.yaml
+		sqlc generate
   '';
 
   scripts.wire-gen.exec = ''

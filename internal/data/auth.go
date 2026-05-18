@@ -3,13 +3,9 @@ package data
 import (
 	"context"
 
-	"github.com/stephenafamo/bob/dialect/psql"
-	"github.com/stephenafamo/bob/dialect/psql/sm"
+	"github.com/go-kratos/kratos/v2/log"
 
 	"github.com/tencat-dev/go-api-base/internal/biz"
-	"github.com/tencat-dev/go-api-base/internal/infra/persistence/postgres/models"
-
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 type authRepo struct {
@@ -26,9 +22,7 @@ func NewAuthRepo(data *Data, logger *log.Helper) biz.AuthRepo {
 }
 
 func (r *authRepo) FindByEmail(ctx context.Context, email string) (*biz.Auth, error) {
-	auth, err := models.Users.Query(
-		sm.Where(models.Users.Columns.Email.EQ(psql.Arg(email))),
-	).One(ctx, r.data.db)
+	auth, err := r.data.queries.GetUserByEmail(ctx, email)
 	if err != nil {
 		return nil, err
 	}
