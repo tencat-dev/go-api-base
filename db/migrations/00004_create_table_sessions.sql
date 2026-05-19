@@ -1,4 +1,5 @@
 -- +goose Up
+-- +goose StatementBegin
 CREATE TABLE sessions
 (
     id            UUID PRIMARY KEY     DEFAULT uuidv7(),
@@ -15,6 +16,9 @@ CREATE TABLE sessions
     expires_at    TIMESTAMPTZ NOT NULL,
     revoked_at    TIMESTAMPTZ
 );
+-- +goose StatementEnd
 
 -- +goose Down
+-- +goose StatementBegin
 DROP TABLE sessions;
+-- +goose StatementEnd
