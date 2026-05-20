@@ -9,5 +9,7 @@ import (
 // ProviderSetInfra is infra providers.
 var ProviderSetInfra = wire.NewSet(
 	auth.NewJWTMaker,
+	auth.NewTokenMaker,
+	auth.TokenParser,
 	auth.NewPasswordHasher,
 )

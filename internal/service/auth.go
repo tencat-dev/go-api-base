@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/anhnmt/go-authxx/token"
 	"github.com/google/uuid"
 
 	pb "github.com/tencat-dev/go-api-base/api/auth/v1"
@@ -14,10 +15,10 @@ type AuthService struct {
 	pb.UnimplementedAuthServiceServer
 
 	authBiz    *biz.AuthBiz
-	tokenMaker biz.TokenMaker
+	tokenMaker token.TokenMaker
 }
 
-func NewAuthService(authBiz *biz.AuthBiz, tokenMaker biz.TokenMaker) pb.AuthServiceServer {
+func NewAuthService(authBiz *biz.AuthBiz, tokenMaker token.TokenMaker) pb.AuthServiceServer {
 	return &AuthService{
 		authBiz:    authBiz,
 		tokenMaker: tokenMaker,
@@ -56,23 +57,21 @@ func (s *AuthService) issueTokenPair(
 	userID uuid.UUID,
 	sessionID uuid.UUID,
 ) (string, string, error) {
-	access, err := s.tokenMaker.CreateToken(now, biz.TokenPayload{
+	access, err := s.tokenMaker.CreateToken(now, token.TokenPayload{
 		UserID:    userID,
 		SessionID: sessionID,
 		TokenID:   uuid.Must(uuid.NewV7()),
-		Type:      biz.AccessToken,
-		TTL:       biz.AccessTokenTTL,
+		Type:      token.AccessToken,
 	})
 	if err != nil {
 		return "", "", err
 	}
 
-	refresh, err := s.tokenMaker.CreateToken(now, biz.TokenPayload{
+	refresh, err := s.tokenMaker.CreateToken(now, token.TokenPayload{
 		UserID:    userID,
 		SessionID: sessionID,
 		TokenID:   uuid.Must(uuid.NewV7()),
-		Type:      biz.RefreshToken,
-		TTL:       biz.RefreshTokenTTL,
+		Type:      token.RefreshToken,
 	})
 	if err != nil {
 		return "", "", err

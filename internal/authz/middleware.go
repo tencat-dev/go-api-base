@@ -4,29 +4,23 @@ import (
 	"context"
 	"strings"
 
+	"github.com/anhnmt/go-authxx/token"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
-	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 
 	"github.com/tencat-dev/go-api-base/internal/biz"
-	"github.com/tencat-dev/go-api-base/internal/conf"
-	"github.com/tencat-dev/go-api-base/internal/infra/auth"
 )
 
 type AuthzMiddleware middleware.Middleware
 
 func NewAuthzMiddleware(
-	jwtConf *conf.JWT,
 	pc biz.PermissionChecker,
 	r *AuthzRegistry,
 	userRepo biz.UserRepo,
+	parser token.TokenParser,
 ) AuthzMiddleware {
-	keyFunc := func(*jwtv5.Token) (any, error) {
-		return []byte(jwtConf.Secret), nil
-	}
-
 	return func(next middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
 			header, ok := transport.FromServerContext(ctx)
@@ -48,7 +42,7 @@ func NewAuthzMiddleware(
 				return nil, err
 			}
 
-			claims, err := parseAndValidateJWT(tokenStr, keyFunc)
+			claims, err := parseTokenOfType(parser, tokenStr, token.AccessToken)
 			if err != nil {
 				return nil, err
 			}
@@ -62,15 +56,15 @@ func NewAuthzMiddleware(
 				return nil, err
 			}
 
-			ctx = NewContext(ctx, claims)
+			ctx = token.NewContext(ctx, claims)
 			return next(ctx, req)
 		}
 	}
 }
 
 func extractBearerToken(header transport.Transporter) (string, error) {
-	token := header.RequestHeader().Get(authorizationKey)
-	parts := strings.SplitN(token, " ", 2)
+	tokenKey := header.RequestHeader().Get(authorizationKey)
+	parts := strings.SplitN(tokenKey, " ", 2)
 
 	if len(parts) != 2 || !strings.EqualFold(parts[0], bearerWord) {
 		return "", ErrMissingJwtToken
@@ -79,57 +73,30 @@ func extractBearerToken(header transport.Transporter) (string, error) {
 	return parts[1], nil
 }
 
-func parseAndValidateJWT(tokenStr string, keyFunc jwtv5.Keyfunc) (*auth.JWTClaims, error) {
-	tokenInfo, err := jwtv5.ParseWithClaims(tokenStr, &auth.JWTClaims{}, keyFunc)
+func parseTokenOfType(parser token.TokenParser, tokenStr string, expectedType token.TokenType) (*token.TokenPayload, error) {
+	payload, err := parser.ParseToken(tokenStr)
 	if err != nil {
 		switch {
-		case errors.Is(err, jwtv5.ErrTokenMalformed),
-			errors.Is(err, jwtv5.ErrTokenUnverifiable):
-			return nil, ErrTokenInvalid
-		case errors.Is(err, jwtv5.ErrTokenExpired),
-			errors.Is(err, jwtv5.ErrTokenNotValidYet):
+		case errors.Is(err, token.ErrExpiredToken):
 			return nil, ErrTokenExpired
 		default:
-			return nil, ErrTokenParseFail
+			return nil, ErrTokenInvalid
 		}
 	}
 
-	if !tokenInfo.Valid {
+	if payload.Type != expectedType {
 		return nil, ErrTokenInvalid
 	}
 
-	if tokenInfo.Method != jwtv5.SigningMethodHS256 {
-		return nil, ErrUnSupportSigningMethod
-	}
-
-	claims, ok := tokenInfo.Claims.(*auth.JWTClaims)
-	if !ok {
-		return nil, ErrTokenInvalid
-	}
-
-	if claims.Type != biz.AccessToken {
-		return nil, errors.Unauthorized("NO_ACCESS_TOKEN", "access token required")
-	}
-
-	return claims, nil
+	return payload, nil
 }
 
 func validateUserFromToken(
 	ctx context.Context,
 	userRepo biz.UserRepo,
-	claims *auth.JWTClaims,
+	claims *token.TokenPayload,
 ) (uuid.UUID, error) {
-	sub, err := claims.GetSubject()
-	if err != nil {
-		return uuid.Nil, errors.Unauthorized("INVALID_TOKEN", err.Error())
-	}
-
-	userID, err := uuid.Parse(sub)
-	if err != nil {
-		return uuid.Nil, errors.Unauthorized("INVALID_TOKEN", err.Error())
-	}
-
-	user, err := userRepo.FindByID(ctx, userID)
+	user, err := userRepo.FindByID(ctx, claims.UserID)
 	if err != nil {
 		return uuid.Nil, err
 	}
@@ -138,7 +105,7 @@ func validateUserFromToken(
 		return uuid.Nil, errors.Unauthorized("INVALID_TOKEN", "token revoked")
 	}
 
-	return userID, nil
+	return claims.UserID, nil
 }
 
 func checkPermission(
