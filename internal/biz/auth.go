@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/anhnmt/go-authxx/password"
+	"github.com/anhnmt/go-authxx/rbac"
 	"github.com/google/uuid"
 )
 
@@ -29,12 +30,12 @@ type AuthRepo interface {
 // AuthBiz is a Auth usecase.
 type AuthBiz struct {
 	repo           AuthRepo
-	authz          PermissionChecker
+	authz          rbac.Checker
 	passwordHasher password.Hasher
 }
 
 // NewAuthBiz new a Auth usecase.
-func NewAuthBiz(repo AuthRepo, authz PermissionChecker, passwordHasher password.Hasher) *AuthBiz {
+func NewAuthBiz(repo AuthRepo, authz rbac.Checker, passwordHasher password.Hasher) *AuthBiz {
 	return &AuthBiz{
 		repo:           repo,
 		authz:          authz,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/anhnmt/go-authxx/rbac"
 	"github.com/anhnmt/go-authxx/token"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
@@ -16,7 +17,7 @@ import (
 type AuthzMiddleware middleware.Middleware
 
 func NewAuthzMiddleware(
-	pc biz.PermissionChecker,
+	pc rbac.Checker,
 	r *AuthzRegistry,
 	userRepo biz.UserRepo,
 	parser token.TokenParser,
@@ -110,10 +111,10 @@ func validateUserFromToken(
 
 func checkPermission(
 	userID uuid.UUID,
-	pc biz.PermissionChecker,
+	pc rbac.Checker,
 	object, action string,
 ) error {
-	allowed, err := pc.Can(userID, object, action)
+	allowed, err := pc.Can(userID.String(), object, action)
 	if err != nil {
 		return err
 	}

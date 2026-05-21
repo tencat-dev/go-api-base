@@ -1,86 +1,26 @@
 package data
 
 import (
-	"fmt"
-
+	"github.com/anhnmt/go-authxx/rbac"
 	"github.com/casbin/casbin/v3"
-	"github.com/google/uuid"
-	pgxadapter "github.com/noho-digital/casbin-pgx-adapter"
-
-	"github.com/tencat-dev/go-api-base/internal/biz"
 )
 
-var _ biz.PermissionChecker = (*CasbinAuthz)(nil)
-var _ biz.PermissionManager = (*CasbinAuthz)(nil)
-
-func NewPermissionChecker(c *CasbinAuthz) biz.PermissionChecker {
-	return c
+func NewCasbinAuthz(enforcer casbin.IEnforcer) *rbac.CasbinAuthz {
+	return rbac.New(enforcer)
 }
-func NewPermissionManager(c *CasbinAuthz) biz.PermissionManager {
+
+func NewPermissionChecker(c *rbac.CasbinAuthz) rbac.Checker {
 	return c
 }
 
-type CasbinAuthz struct {
-	enforcer casbin.IEnforcer
+func NewPermissionManager(c *rbac.CasbinAuthz) rbac.Manager {
+	return c
 }
 
 func NewCasbinEnforcer(data *Data) (casbin.IEnforcer, error) {
-	adapter, err := pgxadapter.NewAdapterWithPool(data.db,
-		pgxadapter.WithTableName("casbin_rules"),        // Optional: custom table name
-		pgxadapter.WithIndex("ptype", "v0", "v1", "v2"), // policy: sub, obj, act
-		pgxadapter.WithIndex("ptype", "v0", "v1"),       // grouping: user -> role
+	return rbac.NewCasbinEnforcer(data.db,
+		rbac.WithModelPath("configs/rbac_model.conf"),
+		rbac.WithIndex("ptype", "v0", "v1", "v2"), // policy: sub, obj, act
+		rbac.WithIndex("ptype", "v0", "v1"),       // grouping: user -> role
 	)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create adapter: %v", err)
-	}
-
-	e, err := casbin.NewSyncedCachedEnforcer("configs/rbac_model.conf", adapter)
-	if err != nil {
-		return nil, err
-	}
-
-	if err = e.LoadPolicy(); err != nil {
-		return nil, err
-	}
-
-	e.EnableAutoSave(true)
-	return e, nil
-}
-
-func NewCasbinAuthz(enforcer casbin.IEnforcer) (*CasbinAuthz, error) {
-	return &CasbinAuthz{enforcer: enforcer}, nil
-}
-
-func (c *CasbinAuthz) Can(userId uuid.UUID, obj, act string) (bool, error) {
-	return c.enforcer.Enforce(userId.String(), obj, act)
-}
-
-func (c *CasbinAuthz) GrantRole(userID uuid.UUID, role string) error {
-	_, err := c.enforcer.AddGroupingPolicy(userID.String(), role)
-	return err
-}
-
-func (c *CasbinAuthz) RevokeRole(userID uuid.UUID, role string) error {
-	_, err := c.enforcer.RemoveGroupingPolicy(userID.String(), role)
-	return err
-}
-
-func (c *CasbinAuthz) GrantPermission(role, obj, act string) error {
-	_, err := c.enforcer.AddPolicy(role, obj, act)
-	return err
-}
-
-func (c *CasbinAuthz) GrantPermissions(rules [][]string) error {
-	_, err := c.enforcer.AddPolicies(rules)
-	return err
-}
-
-func (c *CasbinAuthz) RevokePermission(role, obj, act string) error {
-	_, err := c.enforcer.RemovePolicy(role, obj, act)
-	return err
-}
-
-func (c *CasbinAuthz) DeleteRolesForUser(userID uuid.UUID) error {
-	_, err := c.enforcer.DeleteRolesForUser(userID.String())
-	return err
 }

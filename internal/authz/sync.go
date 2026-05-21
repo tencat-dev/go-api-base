@@ -3,18 +3,20 @@ package authz
 import (
 	"context"
 
+	"github.com/anhnmt/go-authxx/rbac"
+
 	authzv1 "github.com/tencat-dev/go-api-base/api/authz/v1"
 	"github.com/tencat-dev/go-api-base/internal/biz"
 )
 
 type SeederFromRegistry struct {
-	pm            biz.PermissionManager
+	pm            rbac.Manager
 	registry      *AuthzRegistry
 	roleBiz       *biz.RoleBiz
 	permissionBiz *biz.PermissionBiz
 }
 
-func NewSeederFromRegistry(pm biz.PermissionManager, r *AuthzRegistry, roleBiz *biz.RoleBiz,
+func NewSeederFromRegistry(pm rbac.Manager, r *AuthzRegistry, roleBiz *biz.RoleBiz,
 	permissionBiz *biz.PermissionBiz) *SeederFromRegistry {
 	return &SeederFromRegistry{
 		pm:            pm,

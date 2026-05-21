@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/anhnmt/go-authxx/password"
+	"github.com/anhnmt/go-authxx/rbac"
 	"github.com/google/uuid"
 )
 
@@ -33,14 +34,14 @@ type UserRepo interface {
 // UserBiz is a User usecase.
 type UserBiz struct {
 	repo           UserRepo
-	pm             PermissionManager
+	pm             rbac.Manager
 	passwordHasher password.Hasher
 }
 
 // NewUserBiz new a User usecase.
 func NewUserBiz(
 	repo UserRepo,
-	pm PermissionManager,
+	pm rbac.Manager,
 	passwordHasher password.Hasher,
 ) *UserBiz {
 	return &UserBiz{
@@ -99,7 +100,7 @@ func (b *UserBiz) DeleteByID(ctx context.Context, id uuid.UUID) error {
 		return fmt.Errorf("user not found")
 	}
 
-	err = b.pm.DeleteRolesForUser(id)
+	err = b.pm.DeleteRoles(id.String())
 	if err != nil {
 		return err
 	}

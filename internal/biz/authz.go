@@ -4,30 +4,18 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/anhnmt/go-authxx/rbac"
 	"github.com/google/uuid"
 )
 
-type PermissionChecker interface {
-	Can(userId uuid.UUID, obj, act string) (bool, error)
-}
-
-type PermissionManager interface {
-	GrantRole(userID uuid.UUID, role string) error
-	RevokeRole(userID uuid.UUID, role string) error
-	GrantPermission(role, object, action string) error
-	GrantPermissions(rules [][]string) error
-	RevokePermission(role, object, action string) error
-	DeleteRolesForUser(userID uuid.UUID) error
-}
-
 // AuthzBiz is a Auth usecase.
 type AuthzBiz struct {
-	pm       PermissionManager
+	pm       rbac.Manager
 	userRepo UserRepo
 }
 
 // NewAuthzBiz new a Auth usecase.
-func NewAuthzBiz(pm PermissionManager, userRepo UserRepo) *AuthzBiz {
+func NewAuthzBiz(pm rbac.Manager, userRepo UserRepo) *AuthzBiz {
 	return &AuthzBiz{
 		pm:       pm,
 		userRepo: userRepo,
@@ -44,7 +32,7 @@ func (b *AuthzBiz) GrantRole(ctx context.Context, userID uuid.UUID, role string)
 		return fmt.Errorf("user not exist")
 	}
 
-	return b.pm.GrantRole(userID, role)
+	return b.pm.GrantRole(userID.String(), role)
 }
 
 func (b *AuthzBiz) RevokeRole(ctx context.Context, userID uuid.UUID, role string) error {
@@ -57,7 +45,7 @@ func (b *AuthzBiz) RevokeRole(ctx context.Context, userID uuid.UUID, role string
 		return fmt.Errorf("user not exist")
 	}
 
-	return b.pm.RevokeRole(userID, role)
+	return b.pm.RevokeRole(userID.String(), role)
 }
 
 func (b *AuthzBiz) GrantPermission(
