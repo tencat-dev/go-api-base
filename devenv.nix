@@ -14,7 +14,7 @@
   # https://devenv.sh/languages/
 	languages.go = {
 		enable = true;
-		version = "1.26.1";
+		version = "1.26.4";
 	};
 
   # https://devenv.sh/processes/
