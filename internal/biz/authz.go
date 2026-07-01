@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/anhnmt/go-authxx/rbac"
+	"github.com/anhnmt/go-pkgxx/rbac"
 	"github.com/google/uuid"
 )
 

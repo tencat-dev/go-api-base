@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/anhnmt/go-authxx/rbac"
-	"github.com/anhnmt/go-authxx/token"
+	"github.com/anhnmt/go-pkgxx/rbac"
+	"github.com/anhnmt/go-pkgxx/token"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"

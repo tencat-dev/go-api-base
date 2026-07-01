@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/anhnmt/go-authxx/password"
+	"github.com/anhnmt/go-pkgxx/password"
 )
 
 func NewPasswordHasher() password.Hasher {

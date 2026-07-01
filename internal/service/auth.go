@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/anhnmt/go-authxx/token"
+	"github.com/anhnmt/go-pkgxx/token"
 	"github.com/google/uuid"
 
 	pb "github.com/tencat-dev/go-api-base/api/auth/v1"

@@ -1,7 +1,7 @@
 package data
 
 import (
-	"github.com/anhnmt/go-authxx/rbac"
+	"github.com/anhnmt/go-pkgxx/rbac"
 	"github.com/casbin/casbin/v3"
 )
 

@@ -3,7 +3,7 @@ package authz
 import (
 	"context"
 
-	"github.com/anhnmt/go-authxx/rbac"
+	"github.com/anhnmt/go-pkgxx/rbac"
 
 	authzv1 "github.com/tencat-dev/go-api-base/api/authz/v1"
 	"github.com/tencat-dev/go-api-base/internal/biz"

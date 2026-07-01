@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/anhnmt/go-authxx/password"
-	"github.com/anhnmt/go-authxx/rbac"
+	"github.com/anhnmt/go-pkgxx/password"
+	"github.com/anhnmt/go-pkgxx/rbac"
 	"github.com/google/uuid"
 )
 
